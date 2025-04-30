@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>PedidoBot</title>
+</head>
+<body>
+    <h1>Configure seu PedidoBot</h1>
+    <form method="POST">
+        <label>Nome do Bot:</label><br>
+        <input type="text" name="bot_name" required><br><br>
+
+        <label>API Key da OpenAI:</label><br>
+        <input type="text" name="api_key" required><br><br>
+
+        <label>Prompt do Bot (nome do restaurante, cardápio etc):</label><br>
+        <textarea name="prompt" rows="6" cols="50" required></textarea><br><br>
+
+        <label>Telefone (com DDI, ex: 5511999999999):</label><br>
+        <input type="text" name="phone_number" required><br><br>
+
+        <button type="submit">Enviar para WhatsApp</button>
+    </form>
+
+    {% if success %}
+        <p><strong>Mensagem enviada:</strong> {{ response }}</p>
+    {% endif %}
+</body>
+</html>
