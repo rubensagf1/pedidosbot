@@ -1,31 +1,47 @@
-# app.py
-from flask import Flask, render_template, request, redirect, url_for
-from ai_engine import get_ai_response
-from whatsapp_api import send_whatsapp_message
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
+from flask import Flask, request, render_template
+from openai import OpenAI
+import requests
 
 app = Flask(__name__)
 
-@app.route("/", methods=["GET", "POST"])
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == "POST":
-        bot_name = request.form["bot_name"]
-        api_key = request.form["api_key"]
-        prompt = request.form["prompt"]
-        phone_number = request.form["phone_number"]
+    if request.method == 'POST':
+        bot_name = request.form['bot_name']
+        phone_number = request.form['phone_number']
+        prompt = request.form['prompt']
+        openai_key = request.form['openai_key']
+        whatsapp_token = request.form['whatsapp_token']
+        whatsapp_phone_id = request.form['whatsapp_phone_id']
 
-        # Get AI response (welcome message)
-        response = get_ai_response(prompt, api_key)
+        full_number = f"55{phone_number}"
 
-        # Send message via WhatsApp
-        send_whatsapp_message(phone_number, response)
+        client = OpenAI(api_key=openai_key)
 
-        return render_template("index.html", success=True, response=response)
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": prompt},
+                {"role": "user", "content": "Olá! Gostaria de ver o cardápio."}
+            ]
+        )
 
-    return render_template("index.html", success=False)
+        message_text = response.choices[0].message.content
 
-if __name__ == "__main__":
-    app.run(debug=True)
+        url = f"https://graph.facebook.com/v18.0/{whatsapp_phone_id}/messages"
+        headers = {
+            "Authorization": f"Bearer {whatsapp_token}",
+            "Content-Type": "application/json"
+        }
+        data = {
+            "messaging_product": "whatsapp",
+            "to": full_number,
+            "type": "text",
+            "text": {"body": message_text}
+        }
+        requests.post(url, headers=headers, json=data)
+
+        return render_template('index.html', success=True)
+
+    return render_template('index.html', success=False)

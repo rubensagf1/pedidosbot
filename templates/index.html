@@ -1,29 +1,70 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>PedidoBot</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PedidoBot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f9fc;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .success {
+      margin-top: 1rem;
+      color: green;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-    <h1>Configure seu PedidoBot</h1>
+  <div class="container">
+    <h1>Crie seu PedidoBot 🤖</h1>
     <form method="POST">
-        <label>Nome do Bot:</label><br>
-        <input type="text" name="bot_name" required><br><br>
-
-        <label>API Key da OpenAI:</label><br>
-        <input type="text" name="api_key" required><br><br>
-
-        <label>Prompt do Bot (nome do restaurante, cardápio etc):</label><br>
-        <textarea name="prompt" rows="6" cols="50" required></textarea><br><br>
-
-        <label>Telefone (com DDI, ex: 5511999999999):</label><br>
-        <input type="text" name="phone_number" required><br><br>
-
-        <button type="submit">Enviar para WhatsApp</button>
+      <input type="text" name="bot_name" placeholder="Nome do Bot" required />
+      <input type="text" name="phone_number" placeholder="Número WhatsApp (Ex: 3199999999)" required />
+      <input type="text" name="openai_key" placeholder="Chave da OpenAI" required />
+      <input type="text" name="whatsapp_token" placeholder="Token do WhatsApp" required />
+      <input type="text" name="whatsapp_phone_id" placeholder="ID do número do WhatsApp" required />
+      <textarea name="prompt" rows="5" placeholder="Prompt personalizado com nome, cardápio, preços, etc." required></textarea>
+      <button type="submit">Enviar para o WhatsApp</button>
     </form>
-
     {% if success %}
-        <p><strong>Mensagem enviada:</strong> {{ response }}</p>
+      <div class="success">Mensagem enviada com sucesso!</div>
     {% endif %}
+  </div>
 </body>
 </html>
